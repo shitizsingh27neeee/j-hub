@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J-Hub Admin | Data Entry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- COPYING THEME VARIABLES FOR CONSISTENCY --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #121212;
+            --text-main: #ffffff;
+            --text-muted: #999999;
+            --accent-gold: #FFB800;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #222222;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-family); }
+
+        /* --- LAYOUT --- */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar { position: sticky; top: 40px; height: fit-content; }
+        .logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 40px; display: block; color: #fff; text-decoration: none; }
+        .nav-item {
+            display: block; padding: 12px 16px; margin-bottom: 8px;
+            border-radius: 8px; color: var(--text-muted); text-decoration: none;
+            transition: 0.2s; font-weight: 500;
+        }
+        .nav-item:hover, .nav-item.active { background: #1a1a1a; color: #fff; }
+        .nav-item.active { border-left: 3px solid var(--accent-gold); }
+
+        /* --- MAIN CONTENT --- */
+        .header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.8rem; }
+        .status-badge { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        /* --- FORMS --- */
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; margin-bottom: 30px; }
+        .card h2 { margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+        input, select, textarea {
+            width: 100%; padding: 12px; background: #080808; border: 1px solid #333;
+            border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; transition: 0.2s;
+            font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-gold); }
+        textarea { resize: vertical; min-height: 100px; }
+
+        /* --- BUTTONS --- */
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent-gold); color: #000; width: 100%; margin-top: 10px; }
+        .btn-primary:hover { opacity: 0.9; }
+        
+        /* --- RECENT ACTIVITY LOG --- */
+        .log-list { list-style: none; }
+        .log-item { padding: 12px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+        .log-time { font-size: 0.75rem; opacity: 0.6; }
+
+        @media (max-width: 768px) {
+            .admin-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; } /* Simplified for mobile */
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <aside class="sidebar">
+        <a href="#" class="logo">J-Hub Admin</a>
+        <nav>
+            <a href="#resources" class="nav-item active">Resource Vault</a>
+            <a href="#requests" class="nav-item">Request Board</a>
+            <a href="#analytics" class="nav-item">Live Analytics</a>
+            <a href="#users" class="nav-item">User Management</a>
+            <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
+                <a href="index.html" class="nav-item" style="color: var(--accent-red);">Logout</a>
+            </div>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="header">
+            <div>
+                <h1>Dashboard</h1>
+                <p style="color: var(--text-muted);">Manage content and monitor activity.</p>
+            </div>
+            <span class="status-badge">System Operational</span>
+        </div>
+
+        <section id="resources" class="card">
+            <h2>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                Upload to Vault
+            </h2>
+            <form id="resourceForm">
+                <div class="form-grid">
+                    <div>
+                        <label>Resource Title</label>
+                        <input type="text" placeholder="e.g. Marketing Strategy Notes" required>
+                    </div>
+                    <div>
+                        <label>File Type</label>
+                        <select>
+                            <option value="PDF">PDF</option>
+                            <option value="PPT">PPT (PowerPoint)</option>
+                            <option value="DOCX">DOCX (Word)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Author Name</label>
+                        <input type="text" placeholder="Student Name" required>
+                    </div>
+                    <div>
+                        <label>Points Cost</label>
+                        <input type="number" placeholder="e.g. 50 (0 for Free)" required>
+                    </div>
+                    <div class="full-width">
+                        <label>File Upload</label>
+                        <input type="file" style="padding: 8px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Resource</button>
+            </form>
+        </section>
+
+        <section id="requests" class="card">
+            <h2>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Add Manual Request
+            </h2>
+            <form id="requestForm">
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>Student Query</label>
+                        <input type="text" placeholder="e.g. Need help with Python Loops" required>
+                    </div>
+                    <div>
+                        <label>Domain</label>
+                        <select>
+                            <option>Finance</option>
+                            <option>Marketing</option>
+                            <option>IT/Analytics</option>
+                            <option>Operations</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Urgency / Deadline</label>
+                        <input type="text" placeholder="e.g. Due Tomorrow">
+                    </div>
+                    <div class="full-width">
+                        <label>Student Name (Requester)</label>
+                        <input type="text" placeholder="Student Name">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #333; color: #fff; border: 1px solid #444;">Post to Board</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Recent System Activity</h2>
+            <ul class="log-list" id="activityLog">
+                <li class="log-item">
+                    <span>Admin uploaded "Finance 101"</span>
+                    <span class="log-time">2 mins ago</span>
+                </li>
+                <li class="log-item">
+                    <span>New User "Rahul" registered</span>
+                    <span class="log-time">15 mins ago</span>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    // --- SIMPLE JAVASCRIPT TO SIMULATE DATA ENTRY ---
+
+    // 1. Handle Resource Upload
+    document.getElementById('resourceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get values
+        const inputs = this.querySelectorAll('input, select');
+        const title = inputs[0].value;
+        const type = inputs[1].value;
+        
+        // Simulate processing
+        alert(`Successfully uploaded: ${title} (${type})`);
+        
+        // Add to activity log
+        addToLog(`New Resource: "${title}" added to Vault.`);
+        
+        // Clear form
+        this.reset();
+    });
+
+    // 2. Handle Request Post
+    document.getElementById('requestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const inputs = this.querySelectorAll('input, select');
+        const query = inputs[0].value;
+        const domain = inputs[1].value;
+        
+        alert(`Request Posted: ${domain} - ${query}`);
+        addToLog(`Request Posted in ${domain}: "${query}"`);
+        
+        this.reset();
+    });
+
+    // Helper to update the log visually on the page
+    function addToLog(message) {
+        const list = document.getElementById('activityLog');
+        const newItem = document.createElement('li');
+        newItem.className = 'log-item';
+        
+        const now = new Date();
+        const timeString = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
+        
+        newItem.innerHTML = `
+            <span style="color: #fff;">${message}</span>
+            <span class="log-time">Just now (${timeString})</span>
+        `;
+        
+        // Insert at the top
+        list.insertBefore(newItem, list.firstChild);
+    }
+</script>
+
+</body>
+</html>
